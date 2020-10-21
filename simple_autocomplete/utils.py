@@ -1,4 +1,4 @@
-from django.db.models.fields import FieldDoesNotExist, CharField
+from django.db.models.fields import CharField
 from django.conf import settings
 
 
@@ -6,8 +6,8 @@ def get_search_fieldname(model):
     # If model has 'search_field' settings use that. Otherwise, if
     # model has field 'title' then use that, else use the first
     # CharField on model.
-    fieldname = get_setting("%s.%s" % (model._meta.app_label, model.__name__.lower()), \
-        'search_field', '')
+    fieldname = get_setting("%s.%s" % (model._meta.app_label, model.__name__.lower()),
+                            'search_field', '')
     if fieldname:
         try:
             # Django 1.11 deprecates get_field_by_name
@@ -15,9 +15,9 @@ def get_search_fieldname(model):
                 model._meta.get_field_by_name(fieldname)
             else:
                 model._meta.get_field(fieldname)
-        except FieldDoesNotExist:
-            raise RuntimeError("Field '%s.%s' does not exist" % (model._meta.app_label, \
-                model.__name__.lower()))
+        except:
+            raise RuntimeError("Field '%s.%s' does not exist" % (model._meta.app_label,
+                                                                 model.__name__.lower()))
     else:
         try:
             # Django 1.11 deprecates get_field_by_name
@@ -26,7 +26,7 @@ def get_search_fieldname(model):
             else:
                 model._meta.get_field('title')
             fieldname = 'title'
-        except FieldDoesNotExist:
+        except:
             for field in model._meta.fields:
                 if isinstance(field, CharField):
                     fieldname = field.name

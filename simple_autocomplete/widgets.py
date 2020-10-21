@@ -3,15 +3,10 @@ import pickle
 from django.forms.widgets import Select, SelectMultiple
 from django.utils.safestring import mark_safe
 from django.db.models.query import QuerySet
-from django.conf import settings
-try:
-    from django.urls import reverse
-except:
-    from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from simple_autocomplete.monkey import _simple_autocomplete_queryset_cache
-from simple_autocomplete.utils import get_search_fieldname, \
-    get_threshold_for_model
+from simple_autocomplete.utils import get_threshold_for_model
 
 
 class AutoCompleteWidget(Select):
@@ -21,8 +16,7 @@ class AutoCompleteWidget(Select):
     token = None
     model = None
 
-    def __init__(self, url=None, initial_display=None, token=None,
-        model=None, *args, **kwargs):
+    def __init__(self, url=None, initial_display=None, token=None, model=None, *args, **kwargs):
         """
         url: a custom URL that returns JSON with format [(value, label),(value,
         label),...].
@@ -41,7 +35,7 @@ class AutoCompleteWidget(Select):
         self.model = model
         super(AutoCompleteWidget, self).__init__(*args, **kwargs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         if value is None:
             value = ''
 
@@ -106,8 +100,10 @@ class AutoCompleteWidget(Select):
     </script>
 
 <input id="id_%(name)s_helper" type="text" value="%(display)s" />
-<a href="#" title="Clear" onclick="django.jQuery('#id_%(name)s_helper').val(''); django.jQuery('#id_%(name)s_helper').focus(); django.jQuery('#id_%(name)s').val(''); return false;">x<small></small></a>
-<input name="%(name)s" id="id_%(name)s" type="hidden" value="%(value)s" />""" % dict(name=name, url=url, display=display, value=value)
+<a href="#" title="Clear" onclick="django.jQuery('#id_%(name)s_helper').val(''); 
+django.jQuery('#id_%(name)s_helper').focus(); django.jQuery('#id_%(name)s').val(''); return false;">x<small></small></a>
+<input name="%(name)s" id="id_%(name)s" type="hidden" value="%(value)s" />""" % dict(name=name, url=url,
+                                                                                     display=display, value=value)
         return mark_safe(html)
 
 
@@ -118,8 +114,7 @@ class AutoCompleteMultipleWidget(SelectMultiple):
     token = None
     model = None
 
-    def __init__(self, url=None, initial_display=None, token=None,
-        model=None, *args, **kwargs):
+    def __init__(self, url=None, initial_display=None, token=None, model=None, *args, **kwargs):
         """
         url: a custom URL that returns JSON with format [(value, label),(value,
         label),...].
@@ -140,7 +135,7 @@ class AutoCompleteMultipleWidget(SelectMultiple):
         self.model = model
         super(AutoCompleteMultipleWidget, self).__init__(*args, **kwargs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         if value is None:
             value = []
 
@@ -196,7 +191,8 @@ class AutoCompleteMultipleWidget(SelectMultiple):
             var target = $('div.autocomplete-placeholder', parent);
             target.append('<p><input name="' + name + '" value="' + ui.item.real_value + '" '
                 + 'type="hidden" />' + ui.item.value
-                + ' <a href="#" title="Remove" onclick="django.jQuery(this).parent().remove(); django.jQuery('+"'"+'#id_%s_helper'+"'"+').val(' + "''" + '); django.jQuery('+"'"+'#id_%s_helper'+"'"+').focus(); return false;">x<small></small></a></p>');
+                + ' <a href="#" title="Remove" onclick="django.jQuery(this).parent().remove();
+                django.jQuery('+"'"+'#id_%s_helper'+"'"+').val(' + "''" + '); django.jQuery('+"'"+'#id_%s_helper'+"'"+').focus(); return false;">x<small></small></a></p>');
         },
         close: function(event, ui) {
             django.jQuery('#id_%s_helper').val('');
@@ -223,7 +219,8 @@ class AutoCompleteMultipleWidget(SelectMultiple):
                     display = str(obj)
 
                 html += """<p><input name="%s" type="hidden" value="%s" />
-%s <a href="#" title="Remove" onclick="django.jQuery(this).parent().remove(); django.jQuery('#id_%s_helper').val(''); django.jQuery('#id_%s_helper').focus(); return false;">x<small></small></a></p>""" % (name, v, display, name, name)
+%s <a href="#" title="Remove" onclick="django.jQuery(this).parent().remove(); django.jQuery('#id_%s_helper').val('');
+django.jQuery('#id_%s_helper').focus(); return false;">x<small></small></a></p>""" % (name, v, display, name, name)
 
             html += "</div>"
 
